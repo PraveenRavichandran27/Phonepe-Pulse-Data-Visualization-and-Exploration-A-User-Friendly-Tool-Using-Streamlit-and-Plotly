@@ -333,7 +333,7 @@ def top_user_plot_2(df, state):
 
 
 st.set_page_config(layout= "wide")
-st.title("PHONEPE DATA VISUALIZATION AND EXPLORATION")
+st.title(":rainbow[PHONEPE DATA VISUALIZATION AND EXPLORATION]")
 
 with st.sidebar:
     
@@ -343,17 +343,18 @@ if select == "HOME":
        col1,col2= st.columns(2)
 
        with col1:
-        st.header(":violet[PHONEPE]")
+ st.header(":violet[PHONEPE]")
         st.subheader("INDIA'S BEST TRANSACTION APP")
-        st.markdown("PhonePe  is an Indian digital payments and financial technology company")
-        st.write("****FEATURES****")
-        st.write("****Credit & Debit card linking****")
-        st.write("****Bank Balance check****")
-        st.write("****Money Storage****")
-        st.write("****PIN Authorization****")
-        st.download_button("DOWNLOAD THE APP NOW", "https://www.phonepe.com/app-download/")
+        st.markdown("Simplify your payments, amplify your life with PhonePe!")
+        st.write("***Attributes***")
+        st.write("****Recharging mobile and DTH****")
+        st.write("****Making utility payments****")
+        st.write("****Conducting in-store payments****")
+        st.write("****Stock broking app****")
+        st.write("****Digital wallet****")
        with col2:
-        st.image(r"F:\Desktop\Youtube Project\Phonepe Project\Phonepe photo.jpg")
+        st.image(r"F:\Desktop\Youtube Project\Phonepe Project\Phonepe gifs.gif")
+           
 elif select == "DATA EXPLORATION":
 
     tab1, tab2, tab3 = st.tabs(["Aggregated Analysis", "Map Analysis", "Top Analysis"])
