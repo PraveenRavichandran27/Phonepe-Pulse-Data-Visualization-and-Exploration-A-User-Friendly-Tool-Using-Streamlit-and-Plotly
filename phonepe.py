@@ -13,9 +13,9 @@ mydb = mysql.connector.connect(
     user='root',
     password='root',
     database='phonepe_pulse'
+
 )
 cursor = mydb.cursor()
-
 
 # Fetch aggregated_transaction data
 cursor.execute("SELECT * FROM aggregated_transaction")
@@ -69,12 +69,12 @@ def Transaction_amount_count_Y(df, year):
     with col1:
 
         fig_amount= px.bar(tacyg, x="States", y="Transaction_amount", title=f"{year} TRANSACTION AMOUNT",
-                        color_discrete_sequence=px.colors.sequential.Aggrnyl, height= 650,width= 600)
+                        color_discrete_sequence=px.colors.sequential.Purples, height= 650,width= 600)
         st.plotly_chart(fig_amount)
 
     with col2:
         fig_count= px.bar(tacyg, x="States", y="Transaction_count", title=f"{year} TRANSACTION COUNT",
-                        color_discrete_sequence=px.colors.sequential.Bluered_r, height= 650, width= 600)
+                        color_discrete_sequence=px.colors.sequential.Bluered, height= 650, width= 600)
         st.plotly_chart(fig_count)
 
 
@@ -87,11 +87,11 @@ def Transaction_amount_count_Y(df, year):
         states_name= []
         for feature in data1["features"]:
             states_name.append(feature["properties"]["ST_NM"])
-
+        
         states_name.sort()
 
         fig_india_1= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_amount", color_continuous_scale= "earth",
+                                color= "Transaction_amount", color_continuous_scale= "pinkyl",
                                 range_color= (tacyg["Transaction_amount"].min(), tacyg["Transaction_amount"].max()),
                                 hover_name= "States", title= f"{year} TRANSACTION AMOUNT", fitbounds= "locations",
                                 height= 600,width= 600)
@@ -101,7 +101,7 @@ def Transaction_amount_count_Y(df, year):
     with col2:
 
         fig_india_2= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_count", color_continuous_scale= "earth",
+                                color= "Transaction_count", color_continuous_scale= "pinkyl",
                                 range_color= (tacyg["Transaction_count"].min(), tacyg["Transaction_count"].max()),
                                 hover_name= "States", title= f"{year} TRANSACTION COUNT", fitbounds= "locations",
                                 height= 600,width= 600)
@@ -121,7 +121,7 @@ def Transaction_amount_count_Y_Q(df, quarter):
     with col1:
 
         fig_amount= px.bar(tacyg, x="States", y="Transaction_amount", title=f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION AMOUNT",
-                        color_discrete_sequence=px.colors.sequential.Aggrnyl, height= 650,width= 600)
+                        color_discrete_sequence=px.colors.sequential.Purples, height= 650,width= 600)
         st.plotly_chart(fig_amount)
 
     with col2:
@@ -142,7 +142,7 @@ def Transaction_amount_count_Y_Q(df, quarter):
         states_name.sort()
 
         fig_india_1= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_amount", color_continuous_scale= "earth",
+                                color= "Transaction_amount", color_continuous_scale= "pinkyl",
                                 range_color= (tacyg["Transaction_amount"].min(), tacyg["Transaction_amount"].max()),
                                 hover_name= "States", title= f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION AMOUNT", fitbounds= "locations",
                                 height= 600,width= 600)
@@ -152,7 +152,7 @@ def Transaction_amount_count_Y_Q(df, quarter):
     with col2:
 
         fig_india_2= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_count", color_continuous_scale= "earth",
+                                color= "Transaction_count", color_continuous_scale= "pinkyl",
                                 range_color= (tacyg["Transaction_count"].min(), tacyg["Transaction_count"].max()),
                                 hover_name= "States", title= f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION COUNT", fitbounds= "locations",
                                 height= 600,width= 600)
@@ -266,7 +266,7 @@ def map_user_plot_2(df, quarter):
 
     fig_line_1= px.line(muyqg, x= "States", y= ["RegisteredUser", "AppOpens"],
                         title= f"{df['Years'].min()} YEARS {quarter} QUARTER REGISTERED USER, APPOPENS",width= 1000, height= 800, markers= True,
-                        color_discrete_sequence= px.colors.sequential.earth_r)
+                        color_discrete_sequence= px.colors.sequential.pinkyl_r)
     st.plotly_chart(fig_line_1)
 
     return muyq
@@ -279,13 +279,13 @@ def map_user_plot_3(df, states):
     col1,col2= st.columns(2)
     with col1:
         fig_map_user_bar_1= px.bar(muyqs, x= "RegisteredUser", y= "District", orientation= "h",
-                                title= f"{states.upper()} REGISTERED USER", height= 800, color_discrete_sequence= px.colors.sequential.earth_r)
+                                title= f"{states.upper()} REGISTERED USER", height= 800, color_discrete_sequence= px.colors.sequential.pinkyl_r)
         st.plotly_chart(fig_map_user_bar_1)
 
     with col2:
 
         fig_map_user_bar_2= px.bar(muyqs, x= "AppOpens", y= "District", orientation= "h",
-                                title= f"{states.upper()} APPOPENS", height= 800, color_discrete_sequence= px.colors.sequential.earth)
+                                title= f"{states.upper()} APPOPENS", height= 800, color_discrete_sequence= px.colors.sequential.pinkyl)
         st.plotly_chart(fig_map_user_bar_2)
 
 # top_tran_plot_1
@@ -331,30 +331,43 @@ def top_user_plot_2(df, state):
                         color_continuous_scale= px.colors.sequential.Magenta)
     st.plotly_chart(fig_top_pot_2)
 
+#streamlit part
 
-st.set_page_config(layout= "wide")
-st.title(":rainbow[PHONEPE DATA VISUALIZATION AND EXPLORATION]")
+st.set_page_config(page_title= "Phonepe Pulse Data Visualization",
+                   layout= "wide",
+                   initial_sidebar_state= "expanded",
+                   menu_items={'About': """# This dashboard app is created for PhonePe Data Visualization!
+                                        Data has been cloned from Phonepe Pulse Github Repository"""})
+
+st.sidebar.header(":red[**Welcome to the dashboard!**]")
+st.title(":red[PHONEPE--PULSE--DATA--VISUALIZATION]")
 
 with st.sidebar:
     
     select= option_menu("Main Menu",["HOME", "DATA EXPLORATION"])
 
 if select == "HOME":
-       col1,col2= st.columns(2)
+    
+    col1,col2= st.columns(2)
 
-       with col1:
- st.header(":violet[PHONEPE]")
+    with col1:
+        st.header(":red[PHONEPE]")
         st.subheader("INDIA'S BEST TRANSACTION APP")
-        st.markdown("Simplify your payments, amplify your life with PhonePe!")
-        st.write("***Attributes***")
-        st.write("****Recharging mobile and DTH****")
-        st.write("****Making utility payments****")
-        st.write("****Conducting in-store payments****")
-        st.write("****Stock broking app****")
-        st.write("****Digital wallet****")
-       with col2:
+        st.markdown("PhonePe  is an Indian digital payments and financial technology company")
+        st.write("****FEATURES****")
+        st.write("****Credit & Debit card linking****")
+        st.write("****Bank Balance check****")
+        st.write("****Money Storage****")
+        st.write("****PIN Authorization****")
+        
+
+        
+    with col2:
         st.image(r"F:\Desktop\Youtube Project\Phonepe Project\Phonepe gifs.gif")
-           
+
+
+
+
 elif select == "DATA EXPLORATION":
 
     tab1, tab2, tab3 = st.tabs(["Aggregated Analysis", "Map Analysis", "Top Analysis"])
