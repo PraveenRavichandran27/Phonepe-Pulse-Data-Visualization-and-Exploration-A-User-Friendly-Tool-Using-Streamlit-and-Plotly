@@ -6,16 +6,21 @@ import plotly.express as px
 import requests
 import json
 from PIL import Image
+import plotly.graph_objects as go
+
 
 
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='root',
-    database='phonepe_pulse'
-
+    password='Praveen@123456789',
+    database='phonepe'
 )
 cursor = mydb.cursor()
+
+
+
+
 
 # Fetch aggregated_transaction data
 cursor.execute("SELECT * FROM aggregated_transaction")
@@ -68,12 +73,12 @@ def Transaction_amount_count_Y(df, year):
     col1,col2 = st.columns(2)
     with col1:
 
-        fig_amount= px.bar(tacyg, x="States", y="Transaction_amount", title=f"{year} TRANSACTION AMOUNT",
+        fig_amount= px.line(tacyg, x="States", y="Transaction_amount", title=f"{year} TRANSACTION AMOUNT",
                         color_discrete_sequence=px.colors.sequential.Purples, height= 650,width= 600)
         st.plotly_chart(fig_amount)
 
     with col2:
-        fig_count= px.bar(tacyg, x="States", y="Transaction_count", title=f"{year} TRANSACTION COUNT",
+        fig_count= px.line(tacyg, x="States", y="Transaction_count", title=f"{year} TRANSACTION COUNT",
                         color_discrete_sequence=px.colors.sequential.Bluered, height= 650, width= 600)
         st.plotly_chart(fig_count)
 
@@ -87,25 +92,27 @@ def Transaction_amount_count_Y(df, year):
         states_name= []
         for feature in data1["features"]:
             states_name.append(feature["properties"]["ST_NM"])
-        
+
         states_name.sort()
 
-        fig_india_1= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_amount", color_continuous_scale= "pinkyl",
-                                range_color= (tacyg["Transaction_amount"].min(), tacyg["Transaction_amount"].max()),
-                                hover_name= "States", title= f"{year} TRANSACTION AMOUNT", fitbounds= "locations",
-                                height= 600,width= 600)
-        fig_india_1.update_geos(visible= False)
+        fig_india_1 = px.choropleth(tacyg, geojson=data1, locations="States", featureidkey="properties.ST_NM",
+                                color="Transaction_amount", color_continuous_scale=px.colors.sequential.Plasma,
+                                range_color=(tacyg["Transaction_amount"].min(), tacyg["Transaction_amount"].max()),
+                                hover_name="States", title=f"{year} TRANSACTION AMOUNT", fitbounds="locations",
+                                height=600, width=600)
+        fig_india_1.update_geos(visible=False)
+        fig_india_1.update_layout(margin={"r":0,"t":50,"l":0,"b":0}, title_font=dict(size=20))
         st.plotly_chart(fig_india_1)
 
     with col2:
 
-        fig_india_2= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_count", color_continuous_scale= "pinkyl",
-                                range_color= (tacyg["Transaction_count"].min(), tacyg["Transaction_count"].max()),
-                                hover_name= "States", title= f"{year} TRANSACTION COUNT", fitbounds= "locations",
-                                height= 600,width= 600)
-        fig_india_2.update_geos(visible= False)
+        fig_india_2 = px.choropleth(tacyg, geojson=data1, locations="States", featureidkey="properties.ST_NM",
+                                color="Transaction_count", color_continuous_scale=px.colors.sequential.Viridis,
+                                range_color=(tacyg["Transaction_count"].min(), tacyg["Transaction_count"].max()),
+                                hover_name="States", title=f"{year} TRANSACTION COUNT", fitbounds="locations",
+                                height=600, width=600)
+        fig_india_2.update_geos(visible=False)
+        fig_india_2.update_layout(margin={"r":0,"t":50,"l":0,"b":0}, title_font=dict(size=20))
         st.plotly_chart(fig_india_2)
 
     return tacy
@@ -119,15 +126,18 @@ def Transaction_amount_count_Y_Q(df, quarter):
 
     col1,col2= st.columns(2)
     with col1:
-
-        fig_amount= px.bar(tacyg, x="States", y="Transaction_amount", title=f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION AMOUNT",
-                        color_discrete_sequence=px.colors.sequential.Purples, height= 650,width= 600)
-        st.plotly_chart(fig_amount)
+        fig_amount = px.line(tacyg, x="States", y="Transaction_amount", 
+                         title=f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION AMOUNT",
+                         markers=True, color_discrete_sequence=px.colors.sequential.Purples,
+                         height=650, width=600)
+    st.plotly_chart(fig_amount)
 
     with col2:
-        fig_count= px.bar(tacyg, x="States", y="Transaction_count", title=f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION COUNT",
-                        color_discrete_sequence=px.colors.sequential.Bluered_r, height= 650,width= 600)
-        st.plotly_chart(fig_count)
+        fig_count = px.line(tacyg, x="States", y="Transaction_count", 
+                        title=f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION COUNT",
+                        markers=True, color_discrete_sequence=px.colors.sequential.Bluered_r,
+                        height=650, width=600)
+    st.plotly_chart(fig_count)
 
     col1,col2= st.columns(2)
     with col1:
@@ -142,7 +152,7 @@ def Transaction_amount_count_Y_Q(df, quarter):
         states_name.sort()
 
         fig_india_1= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_amount", color_continuous_scale= "pinkyl",
+                                color= "Transaction_amount", color_continuous_scale= "rainbow",
                                 range_color= (tacyg["Transaction_amount"].min(), tacyg["Transaction_amount"].max()),
                                 hover_name= "States", title= f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION AMOUNT", fitbounds= "locations",
                                 height= 600,width= 600)
@@ -152,7 +162,7 @@ def Transaction_amount_count_Y_Q(df, quarter):
     with col2:
 
         fig_india_2= px.choropleth(tacyg, geojson= data1, locations= "States", featureidkey= "properties.ST_NM",
-                                color= "Transaction_count", color_continuous_scale= "pinkyl",
+                                color= "Transaction_count", color_continuous_scale= "rainbow",
                                 range_color= (tacyg["Transaction_count"].min(), tacyg["Transaction_count"].max()),
                                 hover_name= "States", title= f"{tacy['Years'].min()} YEAR {quarter} QUARTER TRANSACTION COUNT", fitbounds= "locations",
                                 height= 600,width= 600)
@@ -162,51 +172,65 @@ def Transaction_amount_count_Y_Q(df, quarter):
     return tacy
 
             
+
 def Aggre_Tran_Transaction_type(df, state):
+    tacy = df[df["States"] == state]
+    tacy.reset_index(drop=True, inplace=True)
 
-    tacy= df[df["States"] == state]
-    tacy.reset_index(drop = True, inplace= True)
+    tacyg = tacy.groupby("Transaction_type")[["Transaction_count", "Transaction_amount"]].sum()
+    tacyg.reset_index(inplace=True)
 
-    tacyg= tacy.groupby("Transaction_type")[["Transaction_count","Transaction_amount"]].sum()
-    tacyg.reset_index(inplace= True)
+    # Create 3D scatter plot
+    fig_scatter_3d = px.scatter_3d(tacyg, x='Transaction_type', y='Transaction_count', z='Transaction_amount',
+                                   title=f"{state.upper()} TRANSACTION DETAILS",
+                                   color='Transaction_amount', size='Transaction_amount',
+                                   color_continuous_scale=px.colors.sequential.Purples,
+                                   hover_name='Transaction_type',
+                                   width=800, height=600)
+    
+    # Update layout and styling if needed
+    fig_scatter_3d.update_layout(scene=dict(
+        xaxis_title='Transaction Type',
+        yaxis_title='Transaction Count',
+        zaxis_title='Transaction Amount'),
+        margin=dict(l=0, r=0, b=0, t=30))
 
-    col1,col2= st.columns(2)
-    with col1:
-        fig_pie_1= px.pie(data_frame= tacyg, names= "Transaction_type", values= "Transaction_amount",
-                            width= 600, title= f"{state.upper()} TRANSACTION AMOUNT", hole= 0.5)
-        st.plotly_chart(fig_pie_1)
-
-    with col2:
-        fig_pie_2= px.pie(data_frame= tacyg, names= "Transaction_type", values= "Transaction_count",
-                            width= 600, title= f"{state.upper()} TRANSACTION COUNT", hole= 0.5)
-        st.plotly_chart(fig_pie_2)
-
+    # Display the 3D scatter plot
+    st.plotly_chart(fig_scatter_3d)
 
 # Aggre_User_analysis_1
 def Aggre_user_plot_1(df, year):
-    aguy= df[df["Years"]== year]
-    aguy.reset_index(drop= True, inplace= True)
+    # Filter the DataFrame for the specified year
+    aguy = df[df["Years"] == year]
+    aguy.reset_index(drop=True, inplace=True)
 
-    aguyg= pd.DataFrame(aguy.groupby("Brands")["Transaction_count"].sum())
-    aguyg.reset_index(inplace= True)
+    # Group by brands and calculate the sum of transaction count
+    aguyg = aguy.groupby("Brands")["Transaction_count"].sum().reset_index()
 
-    fig_bar_1= px.bar(aguyg, x= "Brands", y= "Transaction_count", title= f"{year} BRANDS AND TRANSACTION COUNT",
-                    width= 1000, color_discrete_sequence= px.colors.sequential.haline_r, hover_name= "Brands")
-    st.plotly_chart(fig_bar_1)
+    # Create a bubble chart
+    fig_bubble = px.scatter(aguyg, x="Brands", y="Transaction_count", 
+                            size="Transaction_count", color="Brands", 
+                            title=f"{year} BRANDS AND TRANSACTION COUNT",
+                            width=1000, height=600, hover_name="Brands", 
+                            color_discrete_sequence=px.colors.sequential.haline_r)
+
+    # Display the bubble chart
+    st.plotly_chart(fig_bubble)
 
     return aguy
 
 #Aggre_user_Analysis_2
 def Aggre_user_plot_2(df, quarter):
-    aguyq= df[df["Quarter"]== quarter]
-    aguyq.reset_index(drop= True, inplace= True)
+    aguyq = df[df["Quarter"] == quarter]
+    aguyq.reset_index(drop=True, inplace=True)
 
-    aguyqg= pd.DataFrame(aguyq.groupby("Brands")["Transaction_count"].sum())
-    aguyqg.reset_index(inplace= True)
+    aguyqg = pd.DataFrame(aguyq.groupby("Brands")["Transaction_count"].sum())
+    aguyqg.reset_index(inplace=True)
 
-    fig_bar_1= px.bar(aguyqg, x= "Brands", y= "Transaction_count", title=  f"{quarter} QUARTER, BRANDS AND TRANSACTION COUNT",
-                    width= 1000, color_discrete_sequence= px.colors.sequential.Magenta_r, hover_name="Brands")
-    st.plotly_chart(fig_bar_1)
+    fig_area_1 = px.area(aguyqg, x="Brands", y="Transaction_count", title=f"{quarter} QUARTER, BRANDS AND TRANSACTION COUNT",
+                         width=1000, color_discrete_sequence=px.colors.sequential.Magenta_r, hover_name="Brands")
+    
+    st.plotly_chart(fig_area_1)
 
     return aguyq
 
@@ -221,27 +245,31 @@ def Aggre_user_plot_3(df, state):
     st.plotly_chart(fig_line_1)
 
 
+
 #Map_tran_district
 def Map_tran_District(df, state):
+    tacy = df[df["States"] == state]
+    tacy.reset_index(drop=True, inplace=True)
 
-    tacy= df[df["States"] == state]
-    tacy.reset_index(drop = True, inplace= True)
+    tacyg = tacy.groupby("District")[["Transaction_count", "Transaction_amount"]].sum()
+    tacyg.reset_index(inplace=True)
 
-    tacyg= tacy.groupby("District")[["Transaction_count","Transaction_amount"]].sum()
-    tacyg.reset_index(inplace= True)
-
-    col1,col2= st.columns(2)
-    with col1:
-        fig_bar_1= px.bar(tacyg, x= "Transaction_amount", y= "District", orientation= "h", height= 600,
-                        title= f"{state.upper()} DISTRICT AND TRANSACTION AMOUNT", color_discrete_sequence= px.colors.sequential.Mint_r)
+    # Create bar chart for Transaction Amount with gradient fill
+    with st.sidebar:
+        fig_bar_1 = px.bar(tacyg, x="Transaction_amount", y="District", orientation="h", height=600,
+                           title=f"{state.upper()} DISTRICT AND TRANSACTION AMOUNT",
+                           color="Transaction_amount", color_continuous_scale="Blues")
         st.plotly_chart(fig_bar_1)
 
+    # Create bar chart for Transaction Count with gradient fill
     with col2:
-
-        fig_bar_2= px.bar(tacyg, x= "Transaction_count", y= "District", orientation= "h", height= 600,
-                        title= f"{state.upper()} DISTRICT AND TRANSACTION COUNT", color_discrete_sequence= px.colors.sequential.Bluered_r)
+        fig_bar_2 = px.bar(tacyg, x="Transaction_count", y="District", orientation="h", height=600,
+                           title=f"{state.upper()} DISTRICT AND TRANSACTION COUNT",
+                           color="Transaction_count", color_continuous_scale="Reds")
         st.plotly_chart(fig_bar_2)
 
+
+        
 # map_user_plot_1
 def map_user_plot_1(df, year):
     muy= df[df["Years"]== year]
@@ -250,10 +278,10 @@ def map_user_plot_1(df, year):
     muyg= muy.groupby("States")[["RegisteredUser", "AppOpens"]].sum()
     muyg.reset_index(inplace= True)
 
-    fig_line_1= px.line(muyg, x= "States", y= ["RegisteredUser", "AppOpens"],
-                        title= f"{year} REGISTERED USER, APPOPENS",width= 1000, height= 800, markers= True)
-    st.plotly_chart(fig_line_1)
-
+    fig_scatter = px.scatter(muyg, x="RegisteredUser", y="AppOpens",
+                         trendline="ols", title=f"{year} REGISTERED USER vs APPOPENS",
+                         width=1000, height=800, labels={"RegisteredUser": "Registered Users", "AppOpens": "App Opens"})
+    st.plotly_chart(fig_scatter)
     return muy
 
 # map_user_plot_2
@@ -264,11 +292,21 @@ def map_user_plot_2(df, quarter):
     muyqg= muyq.groupby("States")[["RegisteredUser", "AppOpens"]].sum()
     muyqg.reset_index(inplace= True)
 
-    fig_line_1= px.line(muyqg, x= "States", y= ["RegisteredUser", "AppOpens"],
-                        title= f"{df['Years'].min()} YEARS {quarter} QUARTER REGISTERED USER, APPOPENS",width= 1000, height= 800, markers= True,
-                        color_discrete_sequence= px.colors.sequential.pinkyl_r)
-    st.plotly_chart(fig_line_1)
 
+ # Group by states and calculate the sum
+    muyqg = muyq.groupby("States")[["RegisteredUser", "AppOpens"]].agg(['sum', 'std'])
+    muyqg.columns = ['_'.join(col) for col in muyqg.columns]
+    muyqg.reset_index(inplace=True)
+
+    # Create the line chart with error bars
+    fig_error = px.scatter(muyqg, x="States", y="RegisteredUser_sum", error_y="RegisteredUser_std", 
+                           title=f"{df['Years'].min()} YEARS {quarter} QUARTER REGISTERED USER, APPOPENS",
+                           width=1000, height=800, color_discrete_sequence=px.colors.sequential.Rainbow_r)
+    
+    fig_error.add_scatter(x=muyqg["States"], y=muyqg["AppOpens_sum"], mode='markers+lines', 
+                          name='App Opens', error_y=dict(type='data', array=muyqg["AppOpens_std"]))
+
+    st.plotly_chart(fig_error)
     return muyq
 
 #map_user_plot_3
@@ -277,60 +315,83 @@ def map_user_plot_3(df, states):
     muyqs.reset_index(drop= True, inplace= True)
 
     col1,col2= st.columns(2)
-    with col1:
-        fig_map_user_bar_1= px.bar(muyqs, x= "RegisteredUser", y= "District", orientation= "h",
-                                title= f"{states.upper()} REGISTERED USER", height= 800, color_discrete_sequence= px.colors.sequential.pinkyl_r)
-        st.plotly_chart(fig_map_user_bar_1)
-
-    with col2:
-
-        fig_map_user_bar_2= px.bar(muyqs, x= "AppOpens", y= "District", orientation= "h",
-                                title= f"{states.upper()} APPOPENS", height= 800, color_discrete_sequence= px.colors.sequential.pinkyl)
-        st.plotly_chart(fig_map_user_bar_2)
+    
 
 # top_tran_plot_1
 def Top_transaction_plot_1(df, state):
     tiy= df[df["States"]== state]
     tiy.reset_index(drop= True, inplace= True)
 
-    col1,col2= st.columns(2)
+    col1, col2 = st.columns(2)
+
     with col1:
-        fig_top_insur_bar_1= px.bar(tiy, x= "Quarter", y= "Transaction_amount", hover_data= "Pincodes",
-                                title= "TRANSACTION AMOUNT", height= 650,width= 600, color_discrete_sequence= px.colors.sequential.GnBu_r)
-        st.plotly_chart(fig_top_insur_bar_1)
+        fig_top_insur_pie_1 = px.pie(tiy, values="Transaction_amount", names="Quarter", 
+                                     title="TRANSACTION AMOUNT", hover_data=["Pincodes"],
+                                     height=650, width=600, 
+                                     color_discrete_sequence=px.colors.sequential.GnBu_r)
+        st.plotly_chart(fig_top_insur_pie_1)
 
     with col2:
+        fig_top_insur_pie_2 = px.pie(tiy, values="Transaction_count", names="Quarter", 
+                                     title="TRANSACTION COUNT", hover_data=["Pincodes"],
+                                     height=650, width=600, 
+                                     color_discrete_sequence=px.colors.sequential.Agsunset_r)
+        st.plotly_chart(fig_top_insur_pie_2)
 
-        fig_top_insur_bar_2= px.bar(tiy, x= "Quarter", y= "Transaction_count", hover_data= "Pincodes",
-                                title= "TRANSACTION COUNT", height= 650,width= 600, color_discrete_sequence= px.colors.sequential.Agsunset_r)
-        st.plotly_chart(fig_top_insur_bar_2)
 
 # top_user_plot_1
 def top_user_plot_1(df, year):
-    tuy= df[df["Years"]== year]
-    tuy.reset_index(drop= True, inplace= True)
+    tuy = df[df["Years"] == year]
+    tuy.reset_index(drop=True, inplace=True)
 
-    tuyg= pd.DataFrame(tuy.groupby(["States", "Quarter"])["RegisteredUsers"].sum())
-    tuyg.reset_index(inplace= True)
+    tuyg = pd.DataFrame(tuy.groupby(["States", "Quarter"])["RegisteredUsers"].sum())
+    tuyg.reset_index(inplace=True)
 
-    fig_top_plot_1= px.bar(tuyg, x= "States", y= "RegisteredUsers", color= "Quarter", width= 1000, height= 800,
-                        color_discrete_sequence= px.colors.sequential.Burgyl, hover_name= "States",
-                        title= f"{year} REGISTERED USERS")
+    # Calculate total RegisteredUsers per State to sort by total value
+    state_totals = tuyg.groupby("States")["RegisteredUsers"].sum().reset_index()
+    state_totals = state_totals.sort_values(by="RegisteredUsers", ascending=False)
+    sorted_states = state_totals["States"].tolist()
+
+    # Create a sorted version of tuyg DataFrame based on sorted_states
+    tuyg_sorted = tuyg.copy()
+    tuyg_sorted["States"] = pd.Categorical(tuyg_sorted["States"], categories=sorted_states, ordered=True)
+    tuyg_sorted = tuyg_sorted.sort_values(by="States")
+
+    fig_top_plot_1 = px.bar(tuyg_sorted, x="States", y="RegisteredUsers", color="Quarter", 
+                            width=1000, height=800, color_discrete_sequence=px.colors.sequential.Burgyl, 
+                            hover_name="States", title=f"{year} REGISTERED USERS",
+                            category_orders={"States": sorted_states})
+    
     st.plotly_chart(fig_top_plot_1)
 
     return tuy
 
-
 # top_user_plot_2
 def top_user_plot_2(df, state):
-    tuys= df[df["States"]== state]
-    tuys.reset_index(drop= True, inplace= True)
+    tuys = df[df["States"] == state]
+    tuys.reset_index(drop=True, inplace=True)
 
-    fig_top_pot_2= px.bar(tuys, x= "Quarter", y= "RegisteredUsers", title= "REGISTEREDUSERS, PINCODES, QUARTER",
-                        width= 1000, height= 800, color= "RegisteredUsers", hover_data= "Pincodes",
-                        color_continuous_scale= px.colors.sequential.Magenta)
+    # Create a waterfall chart using plotly.figure_factory
+    fig_top_pot_2 = go.Figure(go.Waterfall(
+        name="",
+        orientation="v",
+        measure=["relative", "relative", "total", "relative", "relative"],
+        x=tuys["Quarter"],
+        textposition="outside",
+        text=tuys["Pincodes"],
+        y=tuys["RegisteredUsers"],
+        connector={"line": {"color": "rgb(63, 63, 63)"}},
+        increasing={"marker": {"color": "green"}},
+        decreasing={"marker": {"color": "red"}},
+    ))
+
+    fig_top_pot_2.update_layout(
+        title="REGISTERED USERS, PINCODES, QUARTER",
+        width=1000,
+        height=800,
+    )
+
     st.plotly_chart(fig_top_pot_2)
-
 #streamlit part
 
 st.set_page_config(page_title= "Phonepe Pulse Data Visualization",
@@ -363,7 +424,7 @@ if select == "HOME":
 
         
     with col2:
-        st.image(r"F:\Desktop\Youtube Project\Phonepe Project\Phonepe gifs.gif")
+        st.image(r"F:\Desktop\Phonepe\Phonepe gifs.gif")
 
 
 
