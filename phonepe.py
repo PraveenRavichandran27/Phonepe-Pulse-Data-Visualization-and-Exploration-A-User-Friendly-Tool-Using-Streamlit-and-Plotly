@@ -254,19 +254,16 @@ def Map_tran_District(df, state):
     tacyg = tacy.groupby("District")[["Transaction_count", "Transaction_amount"]].sum()
     tacyg.reset_index(inplace=True)
 
-    # Create bar chart for Transaction Amount with gradient fill
-    with st.sidebar:
-        fig_bar_1 = px.bar(tacyg, x="Transaction_amount", y="District", orientation="h", height=600,
-                           title=f"{state.upper()} DISTRICT AND TRANSACTION AMOUNT",
-                           color="Transaction_amount", color_continuous_scale="Blues")
-        st.plotly_chart(fig_bar_1)
+    with col1:
+        fig_violin_1 = px.violin(tacyg, x="Transaction_amount", y="District", orientation="h", height=600,
+                             title=f"{state.upper()} DISTRICT AND TRANSACTION AMOUNT", color_discrete_sequence=px.colors.sequential.Mint_r)
+    st.plotly_chart(fig_violin_1)
 
-    # Create bar chart for Transaction Count with gradient fill
     with col2:
-        fig_bar_2 = px.bar(tacyg, x="Transaction_count", y="District", orientation="h", height=600,
-                           title=f"{state.upper()} DISTRICT AND TRANSACTION COUNT",
-                           color="Transaction_count", color_continuous_scale="Reds")
-        st.plotly_chart(fig_bar_2)
+        fig_violin_2 = px.violin(tacyg, x="Transaction_count", y="District", orientation="h", height=600,
+                             title=f"{state.upper()} DISTRICT AND TRANSACTION COUNT", color_discrete_sequence=px.colors.sequential.Bluered_r)
+    st.plotly_chart(fig_violin_2)
+        
 
 
         
