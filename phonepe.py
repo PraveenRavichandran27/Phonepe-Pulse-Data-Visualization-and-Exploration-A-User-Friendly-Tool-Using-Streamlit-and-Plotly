@@ -8,7 +8,7 @@ import json
 from PIL import Image
 import plotly.graph_objects as go
 
-
+ 
 
 mydb = mysql.connector.connect(
     host='localhost',
